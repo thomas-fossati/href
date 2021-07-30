@@ -1,13 +1,7 @@
 package href
 
 import (
-	"errors"
-
 	"github.com/fxamacker/cbor"
-)
-
-var (
-	ErrEndOfArray = errors.New("end of array")
 )
 
 type PC struct {
@@ -36,11 +30,7 @@ func (o PC) AtEnd() bool {
 func (o *PC) Step() bool {
 	o.curr += 1
 
-	if o.AtEnd() {
-		return true
-	}
-
-	return false
+	return o.AtEnd()
 }
 
 func (o PC) Curr() (interface{}, bool) {
