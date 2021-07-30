@@ -39,9 +39,7 @@ func (o *CRI) Parse(data []byte) error {
 	}
 
 	// we have checked that pc is not empty, so we have at least one element
-	if elem, err = pc.Peek(); err != nil {
-		return err
-	}
+	elem, _ = pc.Peek()
 
 	if isScheme(elem) {
 		if err := o.Scheme.Set(elem); err != nil {
@@ -49,7 +47,7 @@ func (o *CRI) Parse(data []byte) error {
 		}
 
 		if elem, err = pc.Next(); err != nil {
-			return err
+			return err // EOF
 		}
 
 		if err := o.Authority.Set(elem); err != nil {
@@ -61,33 +59,24 @@ func (o *CRI) Parse(data []byte) error {
 		}
 	}
 
-	if elem, err = pc.Next(); err != nil {
-		if err == ErrEndOfArray {
-			return nil
-		}
-		return err
+	if elem, err = pc.Next(); err == ErrEndOfArray {
+		return nil
 	}
 
 	if err := o.Path.Set(elem); err != nil {
 		return err
 	}
 
-	if elem, err = pc.Next(); err != nil {
-		if err == ErrEndOfArray {
-			return nil
-		}
-		return err
+	if elem, err = pc.Next(); err == ErrEndOfArray {
+		return nil
 	}
 
 	if err := o.Query.Set(elem); err != nil {
 		return err
 	}
 
-	if elem, err = pc.Next(); err != nil {
-		if err == ErrEndOfArray {
-			return nil
-		}
-		return err
+	if elem, err = pc.Next(); err == ErrEndOfArray {
+		return nil
 	}
 
 	if err := o.Fragment.Set(elem); err != nil {
@@ -96,7 +85,7 @@ func (o *CRI) Parse(data []byte) error {
 
 	_, err = pc.Next()
 	if err != ErrEndOfArray {
-		return fmt.Errorf("spurious elements")
+		return fmt.Errorf("spurious trailing elements")
 	}
 
 	return nil
