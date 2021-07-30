@@ -30,6 +30,7 @@ func (o CRI) String() string {
 func (o *CRI) Parse(data []byte) error {
 	var (
 		pc   *PC
+		eof  bool
 		err  error
 		elem interface{}
 	)
@@ -46,8 +47,8 @@ func (o *CRI) Parse(data []byte) error {
 			return err
 		}
 
-		if elem, err = pc.Next(); err != nil {
-			return err // EOF
+		if elem, eof = pc.Next(); eof {
+			return fmt.Errorf("expecting authority, found EOF")
 		}
 
 		if err := o.Authority.Set(elem); err != nil {
@@ -59,7 +60,7 @@ func (o *CRI) Parse(data []byte) error {
 		}
 	}
 
-	if elem, err = pc.Next(); err == ErrEndOfArray {
+	if elem, eof = pc.Next(); eof {
 		return nil
 	}
 
@@ -67,7 +68,7 @@ func (o *CRI) Parse(data []byte) error {
 		return err
 	}
 
-	if elem, err = pc.Next(); err == ErrEndOfArray {
+	if elem, eof = pc.Next(); eof {
 		return nil
 	}
 
@@ -75,7 +76,7 @@ func (o *CRI) Parse(data []byte) error {
 		return err
 	}
 
-	if elem, err = pc.Next(); err == ErrEndOfArray {
+	if elem, eof = pc.Next(); eof {
 		return nil
 	}
 
@@ -83,8 +84,7 @@ func (o *CRI) Parse(data []byte) error {
 		return err
 	}
 
-	_, err = pc.Next()
-	if err != ErrEndOfArray {
+	if _, eof = pc.Next(); !eof {
 		return fmt.Errorf("spurious trailing elements")
 	}
 

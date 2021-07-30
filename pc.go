@@ -33,36 +33,36 @@ func (o PC) AtEnd() bool {
 	return o.curr == len(o.comp)
 }
 
-func (o *PC) Step() error {
+func (o *PC) Step() bool {
 	o.curr += 1
 
 	if o.AtEnd() {
-		return ErrEndOfArray
+		return true
 	}
 
-	return nil
+	return false
 }
 
-func (o PC) Curr() (interface{}, error) {
+func (o PC) Curr() (interface{}, bool) {
 	if o.AtEnd() {
-		return nil, ErrEndOfArray
+		return nil, true
 	}
 
-	return o.comp[o.curr], nil
+	return o.comp[o.curr], false
 }
 
-func (o *PC) Next() (interface{}, error) {
-	if err := o.Step(); err != nil {
-		return nil, err
+func (o *PC) Next() (interface{}, bool) {
+	if o.Step() {
+		return nil, true
 	}
 
 	return o.Curr()
 }
 
-func (o PC) Peek() (interface{}, error) {
+func (o PC) Peek() (interface{}, bool) {
 	if o.AtEnd() {
-		return nil, ErrEndOfArray
+		return nil, true
 	}
 
-	return o.comp[o.curr], nil
+	return o.comp[o.curr], false
 }
