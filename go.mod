@@ -1,4 +1,4 @@
-module href
+module github.com/thomas-fossati/href
 
 go 1.16
 

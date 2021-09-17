@@ -28,7 +28,7 @@ func (o PC) AtEnd() bool {
 }
 
 func (o *PC) Step() bool {
-	o.curr += 1
+	o.curr++
 
 	return o.AtEnd()
 }
