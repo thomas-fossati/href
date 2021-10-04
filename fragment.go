@@ -3,19 +3,31 @@ package href
 import "fmt"
 
 type Fragment struct {
-	val string
+	val *string
 }
 
 func (o Fragment) String() string {
-	if o.val == "" {
-		return ""
+	return o.Get()
+}
+
+func (o Fragment) IsSet() bool {
+	return o.val != nil
+}
+
+func (o Fragment) Get() string {
+	if o.IsSet() {
+		return *o.val
 	}
-	return "#" + o.val
+	return ""
+}
+
+func (o *Fragment) Reset() {
+	o.val = nil
 }
 
 func (o *Fragment) Set(v interface{}) error {
 	if s, ok := v.(string); ok {
-		o.val = s
+		o.val = &s
 		return nil
 	}
 
