@@ -26,14 +26,11 @@ linters-settings:
   gofmt:
     simplify: false    
   goimports:
-  golint:
-    min-confidence: 0
+  revive:
   govet:
     check-shadowing: true
   lll:
     line-length: 140
-  maligned:
-    suggest-new: true
   misspell:
     locale: US
 
@@ -46,11 +43,10 @@ linters:
     - gocyclo
     - gofmt
     - goimports
-    - golint
+    - revive
     - gosec
     - govet
     - ineffassign
-    - maligned
     - misspell
     - staticcheck
     - structcheck

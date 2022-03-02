@@ -1,42 +1,38 @@
 package href
 
-import (
-	"fmt"
-	"strings"
-)
-
 // path = [*text]
 type Path struct {
-	Segments []string
-	IsNull   bool
-}
-
-func (o Path) String() string {
-	if o.IsNull || len(o.Segments) == 0 {
-		return ""
-	}
-	return "/" + strings.Join(o.Segments, "/")
+	Items
 }
 
 func (o *Path) Set(v interface{}) error {
-	switch t := v.(type) {
-	case []interface{}:
-		return o.SetPath(t)
-	case nil:
-		o.IsNull = true
-		return nil
-	default:
-		return fmt.Errorf("unknown path type: %T", t)
-	}
+	return o.Items.Set(v)
 }
 
-func (o *Path) SetPath(v []interface{}) error {
-	for _, e := range v {
-		if s, ok := e.(string); ok {
-			o.Segments = append(o.Segments, s)
-			continue
-		}
-		return fmt.Errorf("unknow type for path segment: %T", e)
-	}
-	return nil
+func (o Path) IsSet() bool {
+	return o.Items.IsSet()
+}
+
+func (o Path) Get() interface{} {
+	return o.Items.Get()
+}
+
+func (o Path) GetSegments() []string {
+	return o.Items.GetValues()
+}
+
+func (o *Path) Reset() {
+	o.Items.Reset()
+}
+
+func (o Path) NumSegments() uint64 {
+	return o.Items.Count()
+}
+
+func (o *Path) TrimN(n uint64) {
+	o.Items.TrimN(n)
+}
+
+func (o *Path) Append(v []string) {
+	o.Items.Append(v)
 }

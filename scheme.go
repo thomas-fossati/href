@@ -14,15 +14,25 @@ const (
 )
 
 var (
-	schemeRE, _ = regexp.Compile(schemeREString)
+	schemeRE = regexp.MustCompile(schemeREString)
 
 	schemeIDtoString = map[int64]string{
 		-1: "coap",
 		-2: "coaps",
 		-3: "http",
 		-4: "https",
+		-5: "urn",
+		-6: "did",
 	}
 )
+
+func (o Scheme) IsSet() bool {
+	return o.val != nil
+}
+
+func (o Scheme) Get() interface{} {
+	return o.val
+}
 
 func (o *Scheme) Set(v interface{}) error {
 	switch t := v.(type) {
