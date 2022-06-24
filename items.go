@@ -21,6 +21,14 @@ func (o Items) String(sep string) string {
 	return strings.Join(o.values, sep)
 }
 
+func (o Items) StringEscaped(sep string, e escaper) string {
+	if !o.IsSet() {
+		return ""
+	}
+
+	return strings.Join(o.GetEscapedStrings(e), sep)
+}
+
 func (o Items) IsSet() bool {
 	return len(o.values) > 0
 }
@@ -37,6 +45,43 @@ func (o Items) GetValues() []string {
 		panic("there are no values to get")
 	}
 	return o.values
+}
+
+type escaper func(string) string
+type unescaper func(string) (string, error)
+
+func (o Items) GetUnescaped(u unescaper) interface{} {
+	return o.GetUnescapedStrings(u)
+}
+
+func (o Items) GetUnescapedStrings(u unescaper) []string {
+	if o.Get() == nil {
+		return nil
+	}
+
+	unescaped := make([]string, len(o.values))
+	copy(unescaped, o.values)
+
+	for i, qe := range unescaped {
+		unescaped[i], _ = u(qe)
+	}
+
+	return unescaped
+}
+
+func (o Items) GetEscapedStrings(e escaper) []string {
+	if o.Get() == nil {
+		return nil
+	}
+
+	escaped := make([]string, len(o.values))
+	copy(escaped, o.values)
+
+	for i, qe := range escaped {
+		escaped[i] = e(qe)
+	}
+
+	return escaped
 }
 
 func (o *Items) Reset() {

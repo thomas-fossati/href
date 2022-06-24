@@ -127,13 +127,13 @@ func (o *CRI) ToCBOR() ([]byte, error) {
 	}
 
 	if o.Query.IsSet() {
-		pathQueryAndFrag = prepend(o.Query.Get(), pathQueryAndFrag)
+		pathQueryAndFrag = prepend(o.Query.GetUnescaped(), pathQueryAndFrag)
 	} else if len(pathQueryAndFrag) > 0 {
 		pathQueryAndFrag = prepend(nil, pathQueryAndFrag)
 	}
 
 	if o.Path.IsSet() {
-		pathQueryAndFrag = prepend(o.Path.Get(), pathQueryAndFrag)
+		pathQueryAndFrag = prepend(o.Path.GetUnescaped(), pathQueryAndFrag)
 	} else if len(pathQueryAndFrag) > 0 {
 		pathQueryAndFrag = prepend(nil, pathQueryAndFrag)
 	}
@@ -239,7 +239,8 @@ func (o *CRI) toURIPathRules() string {
 		if rooted {
 			path = "/"
 		}
-		path += strings.Join(o.Path.GetSegments(), "/")
+
+		path += strings.Join(o.Path.GetEscapedSegments(), "/")
 	}
 
 	// sanity checks

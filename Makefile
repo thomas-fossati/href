@@ -9,9 +9,7 @@ GOPKG := github.com/thomas-fossati/href
 GOLINT ?= golangci-lint
 
 GH := https://raw.githubusercontent.com/
-# TODO(tho) switch to this path when https://github.com/core-wg/href/pull/12 is merged
-# CORE_WG_HREF_REPO := core-wg/href/master
-CORE_WG_HREF_REPO ?= thomas-fossati/href-1/main/tests
+CORE_WG_HREF_REPO ?= core-wg/href/main/tests
 CORE_WG_HREF_REPO_URL ?= $(join $(GH), $(CORE_WG_HREF_REPO))
 CORE_WG_HREF_TESTS_JSON := tests.json
 

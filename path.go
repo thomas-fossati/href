@@ -1,5 +1,7 @@
 package href
 
+import "net/url"
+
 // path = [*text]
 type Path struct {
 	Items
@@ -15,6 +17,14 @@ func (o Path) IsSet() bool {
 
 func (o Path) Get() interface{} {
 	return o.Items.Get()
+}
+
+func (o Path) GetUnescaped() interface{} {
+	return o.Items.GetUnescaped(url.PathUnescape)
+}
+
+func (o Path) GetEscapedSegments() []string {
+	return o.Items.GetEscapedStrings(url.PathEscape)
 }
 
 func (o Path) GetSegments() []string {
